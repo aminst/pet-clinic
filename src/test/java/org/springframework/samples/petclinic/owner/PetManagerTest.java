@@ -238,4 +238,38 @@ class PetManagerTest {
 
 		verify(spyLogger).info("save pet {}", pet1.getId());
 	}
+
+	/**
+	 * Test doubles used: mock
+	 * State/Behavior: State
+	 * Mockist/Classical: Mockist
+	 */
+	@Test
+	void testGetOwnerPetsReturnsCorrectPets() {
+		owner1.addPet(pet1);
+		owner1.addPet(pet2);
+		when(mockOwnerRepository.findById(1)).thenReturn(owner1);
+
+		List<Pet> pets = petManager.getOwnerPets(1);
+
+		List expectedPets = new ArrayList<Pet>();
+		expectedPets.add(pet1);
+		expectedPets.add(pet2);
+		PropertyComparator.sort(expectedPets, new MutableSortDefinition("name", true, true));
+
+		assertArrayEquals(expectedPets.toArray(), pets.toArray());
+	}
+
+	/**
+	 * Test doubles used: spy
+	 * State/Behavior: Behavior
+	 * Mockist/Classical: Mockist
+	 */
+	@Test
+	void testGetOwnerLogsCorrectly() {
+		when(mockOwnerRepository.findById(1)).thenReturn(owner1);
+		petManager.getOwnerPets(1);
+
+		verify(spyLogger).info("finding the owner's pets by id {}", 1);
+	}
 }
