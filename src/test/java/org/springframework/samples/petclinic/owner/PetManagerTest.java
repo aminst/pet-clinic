@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.springframework.samples.petclinic.utility.PetTimedCache;
 
+import java.util.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -111,4 +113,50 @@ class PetManagerTest {
 		petManager.findOwner(1);
 		verify(spyLogger).info("find owner {}", 1);
 	}
+
+	/**
+	 * Test doubles used: -
+	 * State/Behavior: State
+	 * Mockist/Classical: Classical
+	 */
+	@Test
+	void testNewPetAddsANewPetToTheOwner() {
+		owner1.addPet(pet1);
+		owner1.addPet(pet2);
+		List<Pet> beforePets = owner1.getPets();
+
+		petManager.newPet(owner1);
+
+		List<Pet> afterPets = new ArrayList<>(owner1.getPets());
+		afterPets.removeAll(beforePets);
+		assertEquals(1, afterPets.size());
+	}
+
+	/**
+	 * Test doubles used: spy
+	 * State/Behavior: Behavior
+	 * Mockist/Classical: Mockist
+	 */
+	@Test
+	void testNewPetCallsAddPet() {
+		Owner mockOwner = spy(Owner.class);
+
+		petManager.newPet(mockOwner);
+
+		verify(mockOwner).addPet(any());
+	}
+
+	/**
+	 * Test doubles used: spy
+	 * State/Behavior: Behavior
+	 * Mockist/Classical: Mockist
+	 */
+	@Test
+	void testNewPetLogsCorrectly() {
+		petManager.newPet(owner1);
+
+		verify(spyLogger).info("add pet for owner {}", owner1.getId());
+	}
+
+
 }
