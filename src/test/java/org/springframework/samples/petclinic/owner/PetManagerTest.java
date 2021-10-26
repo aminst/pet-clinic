@@ -4,6 +4,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
+import org.springframework.beans.support.MutableSortDefinition;
+import org.springframework.beans.support.PropertyComparator;
 import org.springframework.samples.petclinic.utility.PetTimedCache;
 
 import java.util.*;
@@ -35,13 +37,10 @@ class PetManagerTest {
 	private void setUpPets() {
 		pet1 = new Pet();
 		pet1.setName("farshid");
-		pet1.setId(1);
 		pet2 = new Pet();
 		pet2.setName("faramarz");
-		pet2.setId(2);
 		pet3 = new Pet();
 		pet3.setName("fereydoon");
-		pet3.setId(3);
 	}
 
 	@BeforeEach
@@ -165,6 +164,7 @@ class PetManagerTest {
 	 */
 	@Test
 	void testFindPetReturnsExistingPetCorrectly() {
+		pet1.setId(1);
 		when(mockPetTimedCache.get(1)).thenReturn(pet1);
 
 		assertSame(pet1, petManager.findPet(1));
@@ -177,6 +177,7 @@ class PetManagerTest {
 	 */
 	@Test
 	void testFindPetReturnsNullIfPetDoesNotExist() {
+		pet1.setId(1);
 		when(mockPetTimedCache.get(1)).thenReturn(pet1);
 
 		assertSame(null, petManager.findPet(4));
@@ -191,5 +192,50 @@ class PetManagerTest {
 	void testFindPetLogsCorrectly() {
 		petManager.findPet(1);
 		verify(spyLogger).info("find pet by id {}", 1);
+	}
+
+	/**
+	 * Test doubles used: spy
+	 * State/Behavior: Behavior
+	 * Mockist/Classical: Mockist
+	 */
+	@Test
+	void testSavePetCallsSavePetCorrectly() {
+		petManager.savePet(pet1, owner1);
+
+		verify(mockPetTimedCache).save(pet1);
+	}
+
+	/**
+	 * Test doubles used: -
+	 * State/Behavior: State
+	 * Mockist/Classical: Classical
+	 */
+	@Test
+	void testSavePetAddsPetToOwner() {
+		owner1.addPet(pet1);
+
+		petManager.savePet(pet2, owner1);
+		List afterPets = owner1.getPets();
+
+		List expectedPets = new ArrayList<Pet>();
+		expectedPets.add(pet1);
+		expectedPets.add(pet2);
+		PropertyComparator.sort(expectedPets, new MutableSortDefinition("name", true, true));
+
+		assertArrayEquals(expectedPets.toArray(), afterPets.toArray());
+	}
+
+	/**
+	 * Test doubles used: spy
+	 * State/Behavior: Behavior
+	 * Mockist/Classical: Mockist
+	 */
+	@Test
+	void testSavePetLogsCorrectly() {
+		pet1.setId(1);
+		petManager.savePet(pet1, owner1);
+
+		verify(spyLogger).info("save pet {}", pet1.getId());
 	}
 }
