@@ -109,7 +109,7 @@ class PetManagerTest {
 	 * Mockist/Classical: Mockist
 	 */
 	@Test
-	void testFindOwnerLoggsCorrectly() {
+	void testFindOwnerLogsCorrectly() {
 		petManager.findOwner(1);
 		verify(spyLogger).info("find owner {}", 1);
 	}
@@ -158,5 +158,38 @@ class PetManagerTest {
 		verify(spyLogger).info("add pet for owner {}", owner1.getId());
 	}
 
+	/**
+	 * Test doubles used: mock
+	 * State/Behavior: State
+	 * Mockist/Classical: Mockist
+	 */
+	@Test
+	void testFindPetReturnsExistingPetCorrectly() {
+		when(mockPetTimedCache.get(1)).thenReturn(pet1);
 
+		assertSame(pet1, petManager.findPet(1));
+	}
+
+	/**
+	 * Test doubles used: mock
+	 * State/Behavior: State
+	 * Mockist/Classical: Mockist
+	 */
+	@Test
+	void testFindPetReturnsNullIfPetDoesNotExist() {
+		when(mockPetTimedCache.get(1)).thenReturn(pet1);
+
+		assertSame(null, petManager.findPet(4));
+	}
+
+	/**
+	 * Test doubles used: spy
+	 * State/Behavior: Behavior
+	 * Mockist/Classical: Mockist
+	 */
+	@Test
+	void testFindPetLogsCorrectly() {
+		petManager.findPet(1);
+		verify(spyLogger).info("find pet by id {}", 1);
+	}
 }
