@@ -24,6 +24,7 @@ class PetManagerTest {
 
 	private Owner owner1, owner2, owner3;
 	private Pet pet1, pet2, pet3;
+	private PetType cat, dog;
 
 	private void setUpOwners() {
 		owner1 = new Owner();
@@ -43,6 +44,16 @@ class PetManagerTest {
 		pet3.setName("fereydoon");
 	}
 
+	private void setUpPetTypes() {
+		cat = new PetType();
+		cat.setName("cat");
+		dog = new PetType();
+		dog.setName("dog");
+	}
+
+	/**
+	 * dummy test double was used to initialize PetManager
+	 */
 	@BeforeEach
 	void setup() {
 		spyLogger = spy(Logger.class);
@@ -53,6 +64,7 @@ class PetManagerTest {
 
 		setUpOwners();
 		setUpPets();
+		setUpPetTypes();
 	}
 
 	private void tearDownOwners() {
@@ -67,6 +79,11 @@ class PetManagerTest {
 		pet3 = null;
 	}
 
+	private void tearDownPetTypes() {
+		cat = null;
+		dog = null;
+	}
+
 	@AfterEach
 	void tearDown() {
 		spyLogger = null;
@@ -76,6 +93,7 @@ class PetManagerTest {
 
 		tearDownOwners();
 		tearDownPets();
+		tearDownPetTypes();
 	}
 
 	/**
@@ -242,7 +260,7 @@ class PetManagerTest {
 	/**
 	 * Test doubles used: mock
 	 * State/Behavior: State
-	 * Mockist/Classical: Mockist
+	 * Mockist/Classical: Classical
 	 */
 	@Test
 	void testGetOwnerPetsReturnsCorrectPets() {
@@ -261,7 +279,7 @@ class PetManagerTest {
 	}
 
 	/**
-	 * Test doubles used: spy
+	 * Test doubles used: spy + mock
 	 * State/Behavior: Behavior
 	 * Mockist/Classical: Mockist
 	 */
@@ -271,5 +289,37 @@ class PetManagerTest {
 		petManager.getOwnerPets(1);
 
 		verify(spyLogger).info("finding the owner's pets by id {}", 1);
+	}
+
+	/**
+	 * Test doubles used: mock
+	 * State/Behavior: State
+	 * Mockist/Classical: Classical
+	 */
+	@Test
+	void testGetOwnerPetTypesReturnsCorrectPetTypes() {
+		pet1.setType(cat);
+		pet2.setType(dog);
+		owner1.addPet(pet1);
+		owner1.addPet(pet2);
+
+		when(mockOwnerRepository.findById(1)).thenReturn(owner1);
+
+		Set<PetType> pets = petManager.getOwnerPetTypes(1);
+
+		assertEquals(new HashSet<PetType>(Arrays.asList(cat, dog)), pets);
+	}
+
+	/**
+	 * Test doubles used: spy + mock
+	 * State/Behavior: Behavior
+	 * Mockist/Classical: Mockist
+	 */
+	@Test
+	void testGetOwnerPetTypesLogsCorrectly() {
+		when(mockOwnerRepository.findById(1)).thenReturn(owner1);
+		petManager.getOwnerPetTypes(1);
+
+		verify(spyLogger).info("finding the owner's petTypes by id {}", 1);
 	}
 }
