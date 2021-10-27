@@ -7,7 +7,9 @@ import org.slf4j.Logger;
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.samples.petclinic.utility.PetTimedCache;
+import org.springframework.samples.petclinic.visit.Visit;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -321,5 +323,52 @@ class PetManagerTest {
 		petManager.getOwnerPetTypes(1);
 
 		verify(spyLogger).info("finding the owner's petTypes by id {}", 1);
+	}
+
+
+	/**
+	 * Test doubles used: mock
+	 * State/Behavior: State
+	 * Mockist/Classical: Classical
+	 */
+	@Test
+	void testGetVisitsBetweenExcludesOtherDates() {
+		Visit visit1 = new Visit().setDate(LocalDate.of(2018, 4, 1));
+		Visit visit2 = new Visit().setDate(LocalDate.of(2019, 2, 10));
+		Visit visit3 = new Visit().setDate(LocalDate.of(2021, 10, 13));
+		pet2.addVisit(visit1);
+		pet2.addVisit(visit2);
+		pet2.addVisit(visit3);
+
+		when(mockPetTimedCache.get(2)).thenReturn(pet2);
+
+		List<Visit> pets = petManager.getVisitsBetween(
+			2,
+			LocalDate.of(2019,1,9),
+			LocalDate.of(2021, 11, 1)
+		);
+
+		List<Visit> expectedPets = new ArrayList<>(Arrays.asList(visit2, visit3));
+
+
+		assertArrayEquals(expectedPets.toArray(), pets.toArray());
+	}
+
+	/**
+	 * Test doubles used: spy + mock
+	 * State/Behavior: Behavior
+	 * Mockist/Classical: Mockist
+	 */
+	@Test
+	void testGetVisitsBetweenLogsCorrectly() {
+		when(mockPetTimedCache.get(2)).thenReturn(pet2);
+
+		int petId = 2;
+		LocalDate startDate = LocalDate.of(2019,1,9);
+		LocalDate endDate = LocalDate.of(2021, 11, 1);
+
+		petManager.getVisitsBetween(petId, startDate, endDate);
+
+		verify(spyLogger).info("get visits for pet {} from {} since {}", petId, startDate, endDate);
 	}
 }
