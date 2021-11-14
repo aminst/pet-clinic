@@ -32,7 +32,18 @@ import java.util.List;
 @Table(name = "types")
 public class PetType extends NamedEntity {
 
-    public Boolean getRare() {
-        return true;
+	@Column
+	boolean isRare;
+
+	public PetType(boolean isRare) {
+		this.isRare = isRare;
+	}
+
+	public PetType() {
+		this.isRare = false;
+	}
+
+	public Boolean getRare() {
+        return this.isRare;
     }
 }
