@@ -156,6 +156,66 @@ class TriCongruenceTest {
 		Assertions.assertFalse(areCongruent);
 	}
 
+	/*
+		15 - CACC
+	 */
+
+	// TF is not possible
+
+	@CACC(
+		predicate = "a + b",
+		majorClause = 'a',
+		valuations = {
+			@Valuation(clause = 'a', valuation = false),
+			@Valuation(clause = 'b', valuation = false)
+		},
+		predicateValue = true
+	)
+	@Test
+	void testCACCFirstEdgeIsPositiveAndSSumIsGreater() {
+		Triangle triangle1 = new Triangle(3, 4, 5);
+		Triangle triangle2 = new Triangle(3, 4, 5);
+		boolean areCongruent = TriCongruence.areCongruent(triangle1, triangle2);
+		log.debug("Triangles identified as '{}'.", areCongruent ? "Congruent" : "Not Congruent");
+		Assertions.assertTrue(areCongruent);
+	}
+
+	@CACC(
+		predicate = "a + b",
+		majorClause = 'b',
+		valuations = {
+			@Valuation(clause = 'a', valuation = false),
+			@Valuation(clause = 'b', valuation = true)
+		},
+		predicateValue = false
+	)
+	@Test
+	void testCACCFirstEdgeIsPositiveAndSSumIsLower() {
+		Triangle triangle1 = new Triangle(3, 4, 9);
+		Triangle triangle2 = new Triangle(3, 4, 9);
+		boolean areCongruent = TriCongruence.areCongruent(triangle1, triangle2);
+		log.debug("Triangles identified as '{}'.", areCongruent ? "Congruent" : "Not Congruent");
+		Assertions.assertFalse(areCongruent);
+	}
+
+	@CACC(
+		predicate = "a + b",
+		majorClause = 'b',
+		valuations = {
+			@Valuation(clause = 'a', valuation = false),
+			@Valuation(clause = 'b', valuation = false)
+		},
+		predicateValue = true
+	)
+	@Test
+	void testCACCFirstEdgeIsPositiveAndSSumIsGreater2() {
+		Triangle triangle1 = new Triangle(3, 4, 5);
+		Triangle triangle2 = new Triangle(3, 4, 5);
+		boolean areCongruent = TriCongruence.areCongruent(triangle1, triangle2);
+		log.debug("Triangles identified as '{}'.", areCongruent ? "Congruent" : "Not Congruent");
+		Assertions.assertTrue(areCongruent);
+	}
+
 	/**
 	 * TODO
 	 * explain your answer here
