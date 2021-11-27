@@ -44,7 +44,7 @@ class TriCongruenceTest {
 	@UniqueTruePoint(
 		predicate = "a + b + c",
 		dnf = "a + b + c",
-		implicant = "a",
+		implicant = "b",
 		valuations = {
 			@Valuation(clause = 'a', valuation = false),
 			@Valuation(clause = 'b', valuation = true),
@@ -62,7 +62,7 @@ class TriCongruenceTest {
 	@UniqueTruePoint(
 		predicate = "a + b + c",
 		dnf = "a + b + c",
-		implicant = "a",
+		implicant = "c",
 		valuations = {
 			@Valuation(clause = 'a', valuation = false),
 			@Valuation(clause = 'b', valuation = false),
@@ -76,6 +76,7 @@ class TriCongruenceTest {
 		log.debug("Triangles identified as '{}'.", areCongruent ? "Congruent" : "Not Congruent");
 		Assertions.assertFalse(areCongruent);
 	}
+
 
 	/**
 	 * TODO
