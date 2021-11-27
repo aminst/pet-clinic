@@ -217,12 +217,22 @@ class TriCongruenceTest {
 	}
 
 	/**
-	 * TODO
-	 * explain your answer here
+	 * predicate = a'b + bc
+	 * CUTPNFP implicants: {a'b, bc}
+	 * CUTPNFP: {unique true points + near false points} =
+	 * unique true points: {FTF, TTT}
+	 * near false points: {TTF, FFF, FFT, TTF}
+	 * CUTPNFP: {FTF, TTT, TTF, FFF, FFT}
+	 *
+	 * predicate = a'b + bc
+	 * predicate' = (a | b') & (b' | c') = ac' + b'
+	 * UTPC = {TTT, FTF, TFT, TTF , FFF, FFT}
+	 *
+	 * TFT is not included in CUTPNFP so it does not subsume.
 	 */
 	private static boolean questionTwo(boolean a, boolean b, boolean c, boolean d, boolean e) {
 		boolean predicate = false;
-//		predicate = a predicate with any number of clauses
+		predicate = (!a && b) || (b & c);
 		return predicate;
 	}
 }
