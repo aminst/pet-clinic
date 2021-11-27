@@ -23,7 +23,7 @@ class TriCongruenceTest {
 	}
 
 	/*
-		CUTPNFP tests
+		line 14 - CUTPNFP tests
 		Unique true points: "TFF", "FTF", "FFT"
 		Near false points: "FFF
 	 */
@@ -103,6 +103,58 @@ class TriCongruenceTest {
 		Assertions.assertTrue(areCongruent);
 	}
 
+	/*
+		15 - CC tests
+	 */
+	@ClauseCoverage(
+		predicate = "a + b",
+		valuations = {
+			@Valuation(clause = 'a', valuation = false),
+			@Valuation(clause = 'b', valuation = false)
+		}
+	)
+	@Test
+	void testClauseCoverageFF() {
+		Triangle triangle1 = new Triangle(3, 4, 5);
+		Triangle triangle2 = new Triangle(3, 4, 5);
+		boolean areCongruent = TriCongruence.areCongruent(triangle1, triangle2);
+		log.debug("Triangles identified as '{}'.", areCongruent ? "Congruent" : "Not Congruent");
+		Assertions.assertTrue(areCongruent);
+	}
+
+	@ClauseCoverage(
+		predicate = "a + b",
+		valuations = {
+			@Valuation(clause = 'a', valuation = false),
+			@Valuation(clause = 'b', valuation = true)
+		}
+	)
+	@Test
+	void testClauseCoverageFT() {
+		Triangle triangle1 = new Triangle(3, 4, 9);
+		Triangle triangle2 = new Triangle(3, 4, 9);
+		boolean areCongruent = TriCongruence.areCongruent(triangle1, triangle2);
+		log.debug("Triangles identified as '{}'.", areCongruent ? "Congruent" : "Not Congruent");
+		Assertions.assertFalse(areCongruent);
+	}
+
+	// TF is not possible
+
+	@ClauseCoverage(
+		predicate = "a + b",
+		valuations = {
+			@Valuation(clause = 'a', valuation = true),
+			@Valuation(clause = 'b', valuation = true)
+		}
+	)
+	@Test
+	void testClauseCoverageTT() {
+		Triangle triangle1 = new Triangle(-1, 4, 9);
+		Triangle triangle2 = new Triangle(-1, 4, 9);
+		boolean areCongruent = TriCongruence.areCongruent(triangle1, triangle2);
+		log.debug("Triangles identified as '{}'.", areCongruent ? "Congruent" : "Not Congruent");
+		Assertions.assertFalse(areCongruent);
+	}
 
 	/**
 	 * TODO
