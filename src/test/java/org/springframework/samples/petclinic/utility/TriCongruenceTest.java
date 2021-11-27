@@ -22,6 +22,61 @@ class TriCongruenceTest {
 		Assertions.assertFalse(areCongruent);
 	}
 
+	@UniqueTruePoint(
+		predicate = "a + b + c",
+		dnf = "a + b + c",
+		implicant = "a",
+		valuations = {
+			@Valuation(clause = 'a', valuation = true),
+			@Valuation(clause = 'b', valuation = false),
+			@Valuation(clause = 'c', valuation = false)
+		})
+	@Test
+	void testEqualEdgesInAreCongruentWithFirstAsUniqueTruePoint() {
+		Triangle triangle1 = new Triangle(2, 3, 5);
+		Triangle triangle2 = new Triangle(3, 3, 5);
+		boolean areCongruent = TriCongruence.areCongruent(triangle1, triangle2);
+		log.debug("Triangles identified as '{}'.", areCongruent ? "Congruent" : "Not Congruent");
+		Assertions.assertFalse(areCongruent);
+
+	}
+
+	@UniqueTruePoint(
+		predicate = "a + b + c",
+		dnf = "a + b + c",
+		implicant = "a",
+		valuations = {
+			@Valuation(clause = 'a', valuation = false),
+			@Valuation(clause = 'b', valuation = true),
+			@Valuation(clause = 'c', valuation = false)
+		})
+	@Test
+	void testEqualEdgesInAreCongruentWithSecondAsUniqueTruePoint() {
+		Triangle triangle1 = new Triangle(2, 3, 5);
+		Triangle triangle2 = new Triangle(2, 4, 5);
+		boolean areCongruent = TriCongruence.areCongruent(triangle1, triangle2);
+		log.debug("Triangles identified as '{}'.", areCongruent ? "Congruent" : "Not Congruent");
+		Assertions.assertFalse(areCongruent);
+	}
+
+	@UniqueTruePoint(
+		predicate = "a + b + c",
+		dnf = "a + b + c",
+		implicant = "a",
+		valuations = {
+			@Valuation(clause = 'a', valuation = false),
+			@Valuation(clause = 'b', valuation = false),
+			@Valuation(clause = 'c', valuation = true)
+		})
+	@Test
+	void testEqualEdgesInAreCongruentWithThirdAsUniqueTruePoint() {
+		Triangle triangle1 = new Triangle(2, 3, 4);
+		Triangle triangle2 = new Triangle(2, 3, 5);
+		boolean areCongruent = TriCongruence.areCongruent(triangle1, triangle2);
+		log.debug("Triangles identified as '{}'.", areCongruent ? "Congruent" : "Not Congruent");
+		Assertions.assertFalse(areCongruent);
+	}
+
 	/**
 	 * TODO
 	 * explain your answer here
