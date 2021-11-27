@@ -22,6 +22,12 @@ class TriCongruenceTest {
 		Assertions.assertFalse(areCongruent);
 	}
 
+	/*
+		CUTPNFP tests
+		Unique true points: "TFF", "FTF", "FFT"
+		Near false points: "FFF
+	 */
+
 	@UniqueTruePoint(
 		predicate = "a + b + c",
 		dnf = "a + b + c",
@@ -75,6 +81,26 @@ class TriCongruenceTest {
 		boolean areCongruent = TriCongruence.areCongruent(triangle1, triangle2);
 		log.debug("Triangles identified as '{}'.", areCongruent ? "Congruent" : "Not Congruent");
 		Assertions.assertFalse(areCongruent);
+	}
+
+	@NearFalsePoint(
+		predicate = "a + b + c",
+		dnf = "a + b + c",
+		implicant = "b", // No difference because FFF
+		clause = 'b',
+		valuations = {
+			@Valuation(clause = 'a', valuation = false),
+			@Valuation(clause = 'b', valuation = false),
+			@Valuation(clause = 'c', valuation = false)
+		}
+	)
+	@Test
+	void testEqualEdgesInAreCongruentWithAllDifferentEdges() {
+		Triangle triangle1 = new Triangle(3, 4, 5);
+		Triangle triangle2 = new Triangle(3, 4, 5);
+		boolean areCongruent = TriCongruence.areCongruent(triangle1, triangle2);
+		log.debug("Triangles identified as '{}'.", areCongruent ? "Congruent" : "Not Congruent");
+		Assertions.assertTrue(areCongruent);
 	}
 
 
