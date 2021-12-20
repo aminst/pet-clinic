@@ -124,4 +124,52 @@ public class PriceCalculatorTest {
 			0.01
 		);
 	}
+
+	@Test
+	public void discountPerVisitIsAppliedForLessThan100DaysFromLastVisitInfantPetsEligibleForDiscount() {
+		List<Pet> pets = List.of(
+			infantPetWithLessThan100DaysFromLastVisit,
+			infantPetWithLessThan100DaysFromLastVisit,
+			infantPetWithLessThan100DaysFromLastVisit,
+			infantPetWithLessThan100DaysFromLastVisit,
+			infantPetWithLessThan100DaysFromLastVisit
+		);
+
+		assertEquals(
+			502.4,
+			priceCalculator.calcPrice(pets, 200, 20),
+			0.01
+		);
+	}
+
+	@Test
+	public void infantCoefIsAppliedFor2YearPet() {
+		infantPetWithMoreThan100DaysFromLastVisit.setBirthDate(LocalDate.now().minusYears(2));
+		assertEquals(
+			33.6,
+			priceCalculator.calcPrice(List.of(infantPetWithMoreThan100DaysFromLastVisit), 200, 20),
+			0.01
+		);
+	}
+
+	@Test
+	public void normalDiscountIsAppliedFor100DayFromLastVisitPets() {
+		Pet pet = new Pet();
+		PetType type = new PetType();
+		pet.setType(type);
+		pet.setBirthDate(LocalDate.now().minusYears(6));
+		Visit visit = new Visit();
+		visit.setDate(LocalDate.now().minusDays(100));
+		pet.addVisit(visit);
+
+		List<Pet> pets = List.of(
+			pet, pet, pet, pet, pet, pet, pet, pet, pet, pet
+		);
+
+		assertEquals(
+			856,
+			priceCalculator.calcPrice(pets, 200, 20),
+			0.01
+		);
+	}
 }
