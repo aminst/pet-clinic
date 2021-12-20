@@ -3,11 +3,15 @@ package org.springframework.samples.petclinic.utility;
 
 import org.junit.After;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.samples.petclinic.owner.Pet;
 import org.springframework.samples.petclinic.owner.PetType;
 import org.springframework.samples.petclinic.visit.Visit;
 
 import java.time.LocalDate;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PriceCalculatorTest {
 	PriceCalculator priceCalculator;
@@ -57,6 +61,15 @@ public class PriceCalculatorTest {
 		infantPetWithLessThan100DaysFromLastVisit = null;
 		notInfantPetWithMoreThan100DaysFromLastVisit = null;
 		notInfantPetWithLessThan100DaysFromLastVisit = null;
+	}
+
+	@Test
+	void priceIsCalculatedCorrectlyForInfantPetWithMoreThan100DaysFromLastVisit() {
+		assertEquals(
+			33.6,
+			priceCalculator.calcPrice(List.of(infantPetWithMoreThan100DaysFromLastVisit), 200, 20),
+			0.01
+		);
 	}
 
 }
