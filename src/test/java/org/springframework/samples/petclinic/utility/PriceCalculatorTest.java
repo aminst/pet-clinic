@@ -81,5 +81,26 @@ public class PriceCalculatorTest {
 		);
 	}
 
+	@Test
+	void discountPerVisitIsAppliedForLessThan100DaysFromLastVisitPetsEligibleForDiscount() {
+		List<Pet> pets = List.of(
+			notInfantPetWithLessThan100DaysFromLastVisit,
+			notInfantPetWithLessThan100DaysFromLastVisit,
+			notInfantPetWithLessThan100DaysFromLastVisit,
+			notInfantPetWithLessThan100DaysFromLastVisit,
+			notInfantPetWithLessThan100DaysFromLastVisit,
+			notInfantPetWithLessThan100DaysFromLastVisit,
+			notInfantPetWithLessThan100DaysFromLastVisit,
+			notInfantPetWithLessThan100DaysFromLastVisit,
+			notInfantPetWithLessThan100DaysFromLastVisit,
+			notInfantPetWithLessThan100DaysFromLastVisit
+		);
+
+		assertEquals(
+			656,
+			priceCalculator.calcPrice(pets, 200, 20),
+			0.01
+		);
+	}
 
 }
