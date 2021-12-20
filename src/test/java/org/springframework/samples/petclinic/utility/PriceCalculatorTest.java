@@ -64,7 +64,7 @@ public class PriceCalculatorTest {
 	}
 
 	@Test
-	void rareCoefIsAppliedForInfantPet() {
+	void infantCoefIsAppliedForInfantPet() {
 		assertEquals(
 			33.6,
 			priceCalculator.calcPrice(List.of(infantPetWithMoreThan100DaysFromLastVisit), 200, 20),
@@ -72,6 +72,14 @@ public class PriceCalculatorTest {
 		);
 	}
 
+	@Test
+	void infantCoefIsNotAppliedForNotInfantPet() {
+		assertEquals(
+			24,
+			priceCalculator.calcPrice(List.of(notInfantPetWithLessThan100DaysFromLastVisit), 200, 20),
+			0.01
+		);
+	}
 
 
 }
