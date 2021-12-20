@@ -2,8 +2,8 @@ package org.springframework.samples.petclinic.utility;
 
 
 import org.junit.After;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.samples.petclinic.owner.Pet;
 import org.springframework.samples.petclinic.owner.PetType;
 import org.springframework.samples.petclinic.visit.Visit;
@@ -21,8 +21,8 @@ public class PriceCalculatorTest {
 	Pet notInfantPetWithMoreThan100DaysFromLastVisit;
 	Pet notInfantPetWithLessThan100DaysFromLastVisit;
 
-	@BeforeEach
-	void setup()  {
+	@Before
+	public void setup()  {
 		priceCalculator = new PriceCalculator();
 
 		PetType type = new PetType();
@@ -54,7 +54,7 @@ public class PriceCalculatorTest {
 	}
 
 	@After
-	void tearDown() {
+	public void tearDown() {
 		priceCalculator = null;
 
 		infantPetWithMoreThan100DaysFromLastVisit = null;
@@ -64,7 +64,7 @@ public class PriceCalculatorTest {
 	}
 
 	@Test
-	void infantCoefIsAppliedForInfantPet() {
+	public void infantCoefIsAppliedForInfantPet() {
 		assertEquals(
 			33.6,
 			priceCalculator.calcPrice(List.of(infantPetWithMoreThan100DaysFromLastVisit), 200, 20),
@@ -73,7 +73,7 @@ public class PriceCalculatorTest {
 	}
 
 	@Test
-	void infantCoefIsNotAppliedForNotInfantPet() {
+	public void infantCoefIsNotAppliedForNotInfantPet() {
 		assertEquals(
 			24,
 			priceCalculator.calcPrice(List.of(notInfantPetWithLessThan100DaysFromLastVisit), 200, 20),
@@ -82,7 +82,7 @@ public class PriceCalculatorTest {
 	}
 
 	@Test
-	void discountPerVisitIsAppliedForLessThan100DaysFromLastVisitPetsEligibleForDiscount() {
+	public void discountPerVisitIsAppliedForLessThan100DaysFromLastVisitPetsEligibleForDiscount() {
 		List<Pet> pets = List.of(
 			notInfantPetWithLessThan100DaysFromLastVisit,
 			notInfantPetWithLessThan100DaysFromLastVisit,
@@ -103,4 +103,25 @@ public class PriceCalculatorTest {
 		);
 	}
 
+	@Test
+	public void normalDiscountIsAppliedForMoreThan100DaysFromLastVisitPetsEligibleForDiscount() {
+		List<Pet> pets = List.of(
+			notInfantPetWithMoreThan100DaysFromLastVisit,
+			notInfantPetWithMoreThan100DaysFromLastVisit,
+			notInfantPetWithMoreThan100DaysFromLastVisit,
+			notInfantPetWithMoreThan100DaysFromLastVisit,
+			notInfantPetWithMoreThan100DaysFromLastVisit,
+			notInfantPetWithMoreThan100DaysFromLastVisit,
+			notInfantPetWithMoreThan100DaysFromLastVisit,
+			notInfantPetWithMoreThan100DaysFromLastVisit,
+			notInfantPetWithMoreThan100DaysFromLastVisit,
+			notInfantPetWithMoreThan100DaysFromLastVisit
+		);
+
+		assertEquals(
+			856,
+			priceCalculator.calcPrice(pets, 200, 20),
+			0.01
+		);
+	}
 }
